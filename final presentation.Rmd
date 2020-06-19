@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = FALSE)
 - 数据及研究方法
 - 描述性统计分析
 - 模型实证及结果
-- 结论与建议
+- 结论与不足之处
 
 ## 1.引言
   
@@ -72,7 +72,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## 1.2境外输入现状 
 ```{r echo=FALSE, results='asis',warning = FALSE}
-data1 <- read.table("comefromforeign.csv",header = TRUE,sep = ",")
+data1 <- read.table("final presentation/comefromforeign.csv",header = TRUE,sep = ",")
 
 time_day<-as.Date(data1$time,"%Y/%m/%d")
 number = data1$all.day
@@ -167,24 +167,19 @@ $$P(t)= \frac {K} {1+(\frac {dK} {dP_0}-1)e^{-rt}} $$
 
 ## 4 描述性统计分析
 
-- 4.1 全国累计确诊人数分布
-- 4.2 境外输入累计确诊人数
-- 4.3 世界各国累计确诊病例
-- 4.4 意大利每日新增病例和累计确诊病例
-
 ## 4.1 全国累计确诊人数分布
 
-```{r echo=FALSE, results='asis',warning = FALSE}
+```{r echo = FALSE, results='hide', warning = FALSE, message = FALSE}
 library(jsonlite);library(rjson);library(RJSONIO)
 library(ggplot2);library(RColorBrewer);library(lubridate)
 library(plyr);library(dplyr);library(rgdal)
 library(sf);library(geojsonio);library(sp);library(ggthemes)
 
-x <- readOGR("省级行政区.shp",stringsAsFactors=FALSE,encoding="UTF-8")
+x <- readOGR("final presentation/省级行政区.shp",stringsAsFactors=FALSE,encoding="UTF-8")
 
-prov_map<-fortify(x)
+prov_map <- fortify(x)
 
-p_id=read.csv("全国累计确诊人数(6.17_24时).csv")
+p_id=read.csv("final presentation/全国累计确诊人数(6.17_24时).csv")
 
 totalp=data.frame(id=p_id$id,pnum=p_id$number,
                   number=cut(p_id$number,breaks=c(0,9,99,499,999,9999,68135),
@@ -192,6 +187,9 @@ totalp=data.frame(id=p_id$id,pnum=p_id$number,
                              order = TRUE,include.lowest = TRUE,right = F))
 
 ttp<-merge.data.frame(prov_map,totalp,by.prov_map="id",by.totalp="id")
+```
+
+```{r echo = FALSE, results='asis', warning = FALSE}
 
 ggplot()+
   geom_polygon(data=ttp,aes(x = long ,y = lat ,group = group, fill = number),
@@ -211,7 +209,7 @@ ggplot()+
 
 ```{r echo=FALSE, results='asis',warning = FALSE}
 #library(ggplot2)
-dataforei <- read.csv("comefromforeign.csv", header = T)
+dataforei <- read.csv("final presentation/comefromforeign.csv", header = T)
 daytime <- as.Date(dataforei$time,"%Y/%m/%d")
 number <- dataforei$totalforeign
 datafor2 <- cbind(as.Date(daytime),number)
@@ -236,7 +234,7 @@ ggplot(data = datafor3, aes(y = number, x = daytime))+
 ```{r echo=FALSE, results='asis',warning = FALSE}
 
 #library(ggplot2)
-data31 <- read.table("World.csv",header = TRUE,sep = ",")
+data31 <- read.table("final presentation/World.csv",header = TRUE,sep = ",")
 
 ggplot(data31,aes(x=country,y=number,
                   color = continent)
@@ -257,7 +255,7 @@ ggplot(data31,aes(x=country,y=number,
 4.4.1 意大利每日新增病例时序图
 
 ```{r echo = FALSE, results='asis', warning = FALSE}
-mydata <- read.table("data_Italy2.csv",header = TRUE,sep = ",")
+mydata <- read.table("final presentation/data_Italy2.csv",header = TRUE,sep = ",")
 
 time_day <- as.Date(mydata$Time, "%Y/%m/%d")
 number1 = mydata$todaynew
@@ -348,7 +346,7 @@ r_range = np.arange(0, 1, 0.01)
 
 
 
-##  **Logistic模型估计意大利疫情结果的对比**
+## 6.1 Logistic模型估计意大利疫情结果的对比
 
 数据截至4月19日，借鉴论文中的参数进行建模预测结果：<br />
 （*Estimation of the final size of the second phase of the coronavirus COVID 19 epidemic by the logistic model*）
@@ -365,7 +363,7 @@ K=177500(2233)<br />
 1.意大利在疫情未能完全控制的情况下开始复工复产，导致确诊病例复增，情况复杂；<br />
 2.当时意大利疫情尚未出现明显拐点，疫情发展处于波动上升阶段，模型拟合情况较好但预测效果不理想。<br />
 
-## **利用网格搜索法优化参数**
+## 6.2 利用网格搜索法优化参数
 |   Date |  Actual |Predicted |Error|Error%|
 |:-----:|:----:|:----:|:----:|:----:|
 |2020/6/11  |235763|229563|6200|2.630|
@@ -373,11 +371,35 @@ K=177500(2233)<br />
 |2020/6/13  |236305|229652|6653|2.815|
 |2020/6/14 |236651|229691|6960|2.941|
 
-## **结论**
-1.根据模型的预测结果，意大利确诊病例总数达230100例，模型预测的相对误差小于3%；<br />
-2.意大利在4月中旬时，疫情未能完全控制的情况下开始复工复产，导致确诊病例复增，确诊病例继续增长，直至五月中旬确诊病例增长才趋于平缓，疫情发展波动曲折，长时间不能得到有效的控制；
 
-## **不足之处**
+## 7 境外输入确诊病例
+```{r echo = FALSE, results='hide', warning = FALSE, message = FALSE}
+m<-(0:44)
+n<-c(18,20,36,60,63,67,69,79,85,88,95, 111, 123,143,155,189,228,269,314,353,427,474,541,595,649,963,723,771,806,841,870,888,913,951,983,1042,1103,1141,1183,1280,1378,1464,1500,1534,1549)
+df<-as.data.frame(cbind(m,n))
+SS <- getInitial(n ~ SSlogis(m, alpha, xmid, scale), data = df)
+K_start <- SS["alpha"]
+R_start <- 1/SS["scale"]
+N0_start <- SS["alpha"]/(exp(SS["xmid"]/SS["scale"])+1)
+log_formula <- formula(n ~ K*N0*exp(R*m)/(K + N0*(exp(R*m) - 1)))
+formu<-nls(log_formula, start = list(K = K_start, R = R_start, N0 = N0_start))
+summary(formu)
+ggplot(df,aes(m,predict(formu)))+geom_line()+
+     geom_point(aes(y=n), color='red')+
+     theme_bw()+
+     theme(panel.grid.minor = element_blank(),panel.grid.major = element_blank())+xlab("days")+ylab("confirmed")
+```
+
+```{r echo = FALSE, results='asis', warning = FALSE}
+```
+
+
+## 8 结论
+1.根据模型的预测结果，意大利确诊病例总数达230100例，模型预测的相对误差小于3%；<br />
+2.意大利在4月中旬时，疫情未能完全控制的情况下开始复工复产，导致确诊病例复增，确诊病例继续增长，直至五月中旬确诊病例增长才趋于平缓，疫情发展波动曲折，长时间不能得到有效的控制；<br />
+3.境外输入病例数前期波动较大，但总体来看利用模型进行拟合结果较为理想；在不发生特殊情况的条件下，境外输入病例确诊最值为1800左右。
+
+## 9 不足之处
 1.Logistic模型只能对疫情的发展的最终情况进行预估，但不能描述疫情发展的全过程；<br />
 2.在确诊病例数处于迅速增长阶段时预测效果可能不理想；<br />
 3.参数的优化方面值得更深入的研究（参考：杨益民,付必谦.关于Logistic增长模型参数估计方法的再探讨[J].统计与决策,2015(13):28-32.）
