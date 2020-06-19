@@ -27,7 +27,8 @@ ggplot(df,aes(m, predict(formu)))+geom_line()+
   ##白色背景主题
   theme_bw()+
   ##主次网络线都为空
-  theme(panel.grid.minor = element_blank(),panel.grid.major = element_blank())+
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank())+
   xlab("Date")+ylab("Cumulative Imported Cases")
 
 #绘制并列柱状图
