@@ -1,0 +1,103 @@
+# Proposal ---- The state of 2019-ncov's development worldwide and its impact on China
+
+### Author:LiuXiaohan SunRongxue WangFan ChengHongyu
+
+### 2020/3/31
+
+
+
+### 1.Research Background
+
+Over the past months,the COVID-19 has made it's  way around China with a strong impact of our life and study. Because of population movements, the disease began to spread rapidly throughout the world in March.  
+The COVID-19 has become a common concern of people all over the world.The chart below shows the number of infected people in nine countries.
+
+```{r  echo=FALSE, results='asis'}
+countrydata <- "
+country  infectionpopulation time
+US  16.3807 3.31
+Italy  10.1739 3.31
+Spain  8.7956 3.31
+China  8.2548 3.31
+Germany  6.6885 3.31
+France  4.517 3.31
+Iran 4.1495 3.31
+Switzerland 1.5992 3.31
+Korea  0.9583 3.31
+"
+cdata<-read.table(header=TRUE,text = countrydata) 
+
+library(xtable)
+print(xtable(cdata),type="html",htlm.table.attributes="border=0")
+
+attach(cdata)
+ri<-sqrt(time/pi)
+symbols(country,infectionpopulation,circles = ri,inches = 0.2,fg="white",bg="lightblue",main = "The situation of the world in 2020/3/31",ylab = "Total number of infected persons(Ten thousand)")
+detach(cdata)
+```
+
+
+The virus was discovered as early as December in 2019 in Wuhan, China.In the early days of the epidemic in China, many people became infected with the virus because of the uncertainty of the situation and the unknown causes.As the research progressed, the scientists discovered the virus and promptly informed the government.The government took effective measures to stop the spread of the disease.By 3.5, the new population had dropped below 100.
+  
+  
+The daily number of new infections in China in March is shown in the chart below:
+
+```{r  echo=FALSE, results='asis'}
+chinadata<-c(202,125,119,139,143,99,44,40,19,24,15,8,11,20,16,21,13,34,39,41,46,39,78,47,67,55,54)
+tschina <- ts(chinadata,start = c(3,1),frequency = 30)
+ plot(tschina)
+```  
+  
+  
+We can see that since March 13, at least half of China's new infections have come from outside the country.And the importation of infected persons abroad showed an upward trend.This situation raises the concern that the increase in imported patients will lead to secondary infection in China?Next, we will study this problem.
+
+
+### 2. Methods and Procedures
+
+#### 2.1 Methods
+The most traditional approach to the spread of an epidemic is the SER model,We will combine  knowledge of statistics and what we have learned to design a new model to study this problem.
+
+#### 2.2 Procedures
+
+1.Analysis of the international situation about the COVID-19.
+
+We will take Italy as an example to analyze the current situation abroad and Using models to predict change point in Italian inflexion populations.
+
+2.Using imported patient data to predict the number of future infections in China.
+
+
+### 3. Data
+
+All of our datasets are come from website:  
+  
+  
+① National Health Commission of the People's Republic of China
+
+http://www.nhc.gov.cn/xcs/yqtb/list_gzbd.shtml
+  
+  
+② World Health Organization
+
+https://www.who.int/
+  
+    
+    
+③C enter for Disease Control and Prevention
+  
+  
+https://www.cdc.gov/coronavirus/2019-ncov/index.html
+
+
+
+### 4. Problems
+
+① Model  
+
+We are not familiar with the SER modal,so we need to spend more time to study it or design our own new model with statistic knowledge.  
+
+② Ability of R coding  
+
+Next we'll use R to do our job,but it is a little bit difficult for us to use it as experts.And we will learn more by exercising.  
+  
+③ Communication 
+
+The companions are not in the school, we are very difficult to discuss the work details togetherand just rely on the network communication tools.
